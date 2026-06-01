@@ -1,0 +1,9 @@
+[project]
+name = "darkroom"
+version = "0.1.0"
+description = "A simple browser-based image manipulation program utilizing WASM"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.3",
+]
