@@ -1,14 +1,15 @@
 const imageInput = document.getElementById('image');
 const canvasContainer = document.getElementById('canvas-container');
 const canvas = document.createElement('canvas');
-const ctx = canvas.getContext("2d");
-canvas.id = 'canvas';
+const ctx = canvas.getContext('2d');
+let originalImageData;
+let image;
 
 imageInput.addEventListener('change', function() {
     const imageFile = imageInput.files[0];
     if (imageFile) {
         canvasContainer.appendChild(canvas);
-        const image = new Image();
+        image = new Image();
 
         image.src = URL.createObjectURL(imageFile);
 
@@ -17,6 +18,49 @@ imageInput.addEventListener('change', function() {
             canvas.height = image.naturalHeight;
 
             ctx.drawImage(image, 0, 0);
+            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         }
     }
 });
+
+function greyScale(ctx, imageData) {
+    const newImageData = ctx.createImageData(canvas.width, canvas.height);
+    const originalPixels = imageData.data;
+    const newPixels = newImageData.data;
+
+    for (let i = 0; i < originalPixels.length; i += 4) {
+        const average = ((originalPixels[i] + originalPixels[i + 1] + originalPixels[i + 2]) / 3) | 0;
+
+        newPixels[i] = average;
+        newPixels[i + 1] = average;
+        newPixels[i + 2] = average;
+        newPixels[i + 3] = 255;
+    }
+
+    ctx.putImageData(newImageData, 0, 0);
+}
+
+function reset(ctx, originalImageData) {
+    ctx.putImageData(originalImageData, 0, 0);
+}
+
+function imageOK() {
+    return image !== undefined && originalImageData !== undefined && image.complete && image.naturalWidth !== 0;
+}
+
+const greyScaleButton = document.getElementById('grey-scale-button');
+greyScaleButton.addEventListener('click', function() {
+    if (imageOK()) {
+        greyScale(ctx, originalImageData);
+    }
+    else {
+        console.log('image not loaded yet');
+    }
+})
+
+const resetButton = document.getElementById('reset-button');
+resetButton.addEventListener('click', function() {
+    if (imageOK()) {
+        reset(ctx, originalImageData);
+    }
+})
