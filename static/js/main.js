@@ -63,4 +63,20 @@ resetButton.addEventListener('click', function() {
     if (imageOK()) {
         reset(ctx, originalImageData);
     }
+    else {
+        console.log('image not loaded yet');
+    }
+})
+
+const exportButton = document.getElementById('export-button');
+exportButton.addEventListener('click', function() {
+    if (imageOK()) {
+        canvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = "file.png";
+            link.href = url;
+            link.click();
+        })
+    }
 })
