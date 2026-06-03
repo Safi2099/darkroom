@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
 
-        <meta charset="utf-8">
+        <meta charset="UTF-8">
         <meta name="viewport" content="initial-scale=1, width=device-width">
 
         <title>Darkroom</title>
@@ -12,11 +12,11 @@
     </head>
 
     <body>
-        <input type="file" accept="image/png, image/jpeg" id="image">
-        <input type="button" id="grey-scale-button" value="Greyscale">
-        <input type="button" id="sepia-button" value="Sepia">
-        <input type="button" id="invert-button" value="Invert">
-        <input type="button" id="reset-button" value="Reset">
+        <input type="file" id="image-input" accept="image/png, image/jpeg, image/webp">
+        <input type="button" class="filter-btn" data-filter="greyScale" value="Greyscale">
+        <input type="button" class="filter-btn" data-filter="sepia" value="Sepia">
+        <input type="button" class="filter-btn" data-filter="invert" value="Invert">
+        <input type="button" class="filter-btn" data-filter="reset" value="Reset">
 
         <label>Export As:</label>
         <select id="export-dropdown">
@@ -29,6 +29,6 @@
 
         <div id="canvas-container"></div>
 
-        <script src="/static/js/main.js"></script>
+        <script type="module" src="/static/js/main.js"></script>
     </body>
 </html>
