@@ -13,8 +13,18 @@
 
     <body>
         <input type="file" accept="image/png, image/jpeg" id="image">
-        <input type="button" id="grey-scale-button" value="Grey scale">
+        <input type="button" id="grey-scale-button" value="Greyscale">
+        <input type="button" id="sepia-button" value="Sepia">
+        <input type="button" id="invert-button" value="Invert">
         <input type="button" id="reset-button" value="Reset">
+
+        <label>Export As:</label>
+        <select id="export-dropdown">
+            <option selected disabled value="">Format</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+        </select>
         <input type="button" id="export-button" value="Export">
 
         <div id="canvas-container"></div>
