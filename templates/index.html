@@ -13,10 +13,12 @@
 
     <body>
         <input type="file" id="image-input" accept="image/png, image/jpeg, image/webp">
-        <input type="button" class="filter-btn" data-filter="greyScale" value="Greyscale">
-        <input type="button" class="filter-btn" data-filter="sepia" value="Sepia">
-        <input type="button" class="filter-btn" data-filter="invert" value="Invert">
-        <input type="button" class="filter-btn" data-filter="reset" value="Reset">
+        <input type="button" class="operation-btn" data-type="filter" data-filter="greyscale" value="Greyscale">
+        <input type="button" class="operation-btn" data-type="filter" data-filter="sepia" value="Sepia">
+        <input type="button" class="operation-btn" data-type="filter" data-filter="invert" value="Invert">
+        <input type="button" class="operation-btn" data-type="filter" data-filter="reset" value="Reset">
+        <input type="button" class="operation-btn" data-type="adjust" data-adjust="brightness" data-amount="10" value="Brightness +10">
+        <input type="button" class="operation-btn" data-type="adjust" data-adjust="brightness" data-amount="-10" value="Brightness -10">
 
         <label>Export As:</label>
         <select id="export-dropdown">

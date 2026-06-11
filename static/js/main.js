@@ -1,9 +1,9 @@
-import { greyScale, sepia, invert, reset, imageOK, filter, triggerDownload } from './helpers.js';
+import { filter, adjust, reset, imageOK, triggerDownload } from './helpers.js';
 
 const imageInput = document.getElementById('image-input');
 const canvasContainer = document.getElementById('canvas-container');
 const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 let originalImageData;
 let currentObjectURL;
 let image;
@@ -31,18 +31,25 @@ imageInput.addEventListener('change', function() {
     }
 });
 
-const filters = {
-    "greyScale": greyScale,
-    "sepia": sepia,
-    "invert": invert,
-    "reset": reset
-}
+const operationButtons = document.querySelectorAll('.operation-btn');
+for (const operationButton of operationButtons) {
+    operationButton.addEventListener('click', function() {
+        if (!imageOK(image)) {
+            return;
+        }
 
-const filterButtons = document.querySelectorAll('.filter-btn');
-for (const filterButton of filterButtons) {
-    filterButton.addEventListener('click', function() {
-        const filterFunc = filters[filterButton.dataset.filter];
-        filter(ctx, image, originalImageData, filterFunc);
+        if (operationButton.dataset.type === 'filter') {
+            if (operationButton.dataset.filter === 'reset') {
+                reset(ctx, originalImageData);
+            }
+
+            else {
+                filter(ctx, operationButton.dataset.filter);
+            }
+        }
+        else {
+            adjust(ctx, operationButton.dataset.adjust, operationButton.dataset.amount);
+        }
     });
 }
 
@@ -50,8 +57,12 @@ const exportButton = document.getElementById('export-button');
 const exportDropdown = document.getElementById('export-dropdown');
 
 exportButton.addEventListener('click', function() {
-    if (!imageOK(image, originalImageData) || !exportDropdown.value) {
+    if (!imageOK(image, originalImageData)) {
         console.log('image not loaded yet');
+        return;
+    }
+    else if (!exportDropdown.value) {
+        console.log('format not selected');
         return;
     }
 
