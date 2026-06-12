@@ -14,15 +14,15 @@
     <body>
         <input type="file" id="image-input" accept="image/png, image/jpeg, image/webp">
 
-        <input type="button" class="operation-btn" data-type="filter" data-filter="greyscale" value="Greyscale">
-        <input type="button" class="operation-btn" data-type="filter" data-filter="sepia" value="Sepia">
-        <input type="button" class="operation-btn" data-type="filter" data-filter="invert" value="Invert">
-        <input type="button" class="operation-btn" data-type="filter" data-filter="reset" value="Reset">
+        <input type="button" class="operation-btn" data-type="reset" value="Reset">
+        <input type="button" class="operation-btn" data-type="filter" data-name="greyscale" value="Greyscale">
+        <input type="button" class="operation-btn" data-type="filter" data-name="sepia" value="Sepia">
+        <input type="button" class="operation-btn" data-type="filter" data-name="invert" value="Invert">
 
-        <input type="button" class="operation-btn" data-type="adjust" data-adjust="brightness" data-amount="10" value="Brightness +10">
-        <input type="button" class="operation-btn" data-type="adjust" data-adjust="brightness" data-amount="-10" value="Brightness -10">
-        <input type="button" class="operation-btn" data-type="adjust" data-adjust="contrast" data-amount="1.1" value="Contrast +10%">
-        <input type="button" class="operation-btn" data-type="adjust" data-adjust="contrast" data-amount="0.9" value="Contrast -10%">
+        <input type="button" class="operation-btn" data-type="adjust" data-name="brightness" data-amount="10" value="Brightness +10">
+        <input type="button" class="operation-btn" data-type="adjust" data-name="brightness" data-amount="-10" value="Brightness -10">
+        <input type="button" class="operation-btn" data-type="adjust" data-name="contrast" data-amount="1.1" value="Contrast +10%">
+        <input type="button" class="operation-btn" data-type="adjust" data-name="contrast" data-amount="0.9" value="Contrast -10%">
 
         <label>Export As:</label>
         <select id="export-dropdown">

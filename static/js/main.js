@@ -38,17 +38,15 @@ for (const operationButton of operationButtons) {
             return;
         }
 
-        if (operationButton.dataset.type === 'filter') {
-            if (operationButton.dataset.filter === 'reset') {
-                reset(ctx, originalImageData);
-            }
-
-            else {
-                filter(ctx, operationButton.dataset.filter);
-            }
+        const type = operationButton.dataset.type;
+        if (type === 'filter') {
+            filter(ctx, operationButton.dataset.name);
+        }
+        else if (type === 'adjust') {
+            adjust(ctx, operationButton.dataset.name, operationButton.dataset.amount);
         }
         else {
-            adjust(ctx, operationButton.dataset.adjust, operationButton.dataset.amount);
+            reset(ctx, originalImageData);
         }
     });
 }
