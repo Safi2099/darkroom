@@ -1,5 +1,5 @@
 export function filter(ctx, filter) {
-    const filters = { greyscale, sepia, invert };
+    const filters = { greyscale, sepia, invert, blur };
     const filterFunc = filters[filter];
 
     if (filterFunc) {
@@ -75,6 +75,59 @@ export function invert(ctx) {
     }
 
     ctx.putImageData(imageData, 0, 0);
+}
+
+export function blur(ctx) {
+    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const newImageData = ctx.createImageData(oldImageData);
+
+    const oldData = oldImageData.data;
+    const newData = newImageData.data;
+
+    for (let i = 0; i < oldData.length; i += 4) {
+        const pixelIndex = (i / 4) | 0;
+        const x = pixelIndex % oldImageData.width;
+        const y = (pixelIndex / oldImageData.width) | 0;
+
+        let sumR = 0;
+        let sumG = 0;
+        let sumB = 0;
+
+        let divisor = 0;
+
+        for (let dy = -1; dy <= 1; dy++) {
+            const row = y + dy;
+            if (row < 0) {
+                continue;
+            }
+            else if (row > oldImageData.height - 1) {
+                break;
+            }
+
+            for (let dx = -1; dx <= 1; dx++) {
+                const column = x + dx;
+                if (column < 0) {
+                    continue;
+                }
+                else if (column > oldImageData.width - 1) {
+                    break;
+                }
+
+                const index = (row * oldImageData.width + column) * 4;
+                sumR += oldData[index];
+                sumG += oldData[index + 1];
+                sumB += oldData[index + 2];
+                divisor++;
+            }
+        }
+
+        newData[i] = (sumR / divisor) | 0;
+        newData[i + 1] = (sumG / divisor) | 0;
+        newData[i + 2] = (sumB / divisor) | 0;
+        newData[i + 3] = oldData[i + 3];
+    }
+
+    ctx.putImageData(newImageData, 0, 0);
 }
 
 export function brightness(ctx, amount) {
