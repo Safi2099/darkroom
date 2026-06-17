@@ -1,5 +1,5 @@
 export function filter(ctx, filter) {
-    const filters = { greyscale, sepia, invert, blur };
+    const filters = { greyscale, sepia, invert, blur, edges };
     const filterFunc = filters[filter];
 
     if (filterFunc) {
@@ -89,31 +89,27 @@ export function blur(ctx) {
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 
-        let sumR = 0;
-        let sumG = 0;
-        let sumB = 0;
+        let sumR = 0, sumG = 0, sumB = 0;
 
         let divisor = 0;
 
-        for (let dy = -1; dy <= 1; dy++) {
-            const row = y + dy;
+        for (let row = y - 1; row <= y + 1; row++) {
             if (row < 0) {
                 continue;
             }
-            else if (row > oldImageData.height - 1) {
+            else if (row >= oldImageData.height) {
                 break;
             }
 
-            for (let dx = -1; dx <= 1; dx++) {
-                const column = x + dx;
-                if (column < 0) {
+            for (let col = x - 1; col <= x + 1; col++) {
+                if (col < 0) {
                     continue;
                 }
-                else if (column > oldImageData.width - 1) {
+                else if (col >= oldImageData.width) {
                     break;
                 }
 
-                const index = (row * oldImageData.width + column) * 4;
+                const index = (row * oldImageData.width + col) * 4;
                 sumR += oldData[index];
                 sumG += oldData[index + 1];
                 sumB += oldData[index + 2];
@@ -124,6 +120,73 @@ export function blur(ctx) {
         newData[i] = (sumR / divisor) | 0;
         newData[i + 1] = (sumG / divisor) | 0;
         newData[i + 2] = (sumB / divisor) | 0;
+        newData[i + 3] = oldData[i + 3];
+    }
+
+    ctx.putImageData(newImageData, 0, 0);
+}
+
+export function edges(ctx) {
+    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const newImageData = ctx.createImageData(oldImageData);
+
+    const oldData = oldImageData.data;
+    const newData = newImageData.data;
+
+    const gx = [
+        [-1, 0, 1],
+        [-2, 0, 2],
+        [-1, 0, 1],
+    ];
+
+    const gy = [
+        [-1, -2, -1],
+        [0, 0, 0],
+        [1, 2, 1],
+    ]
+
+    for (let i = 0; i < oldData.length; i += 4) {
+        const pixelIndex = (i / 4) | 0;
+        const x = pixelIndex % oldImageData.width;
+        const y = (pixelIndex / oldImageData.width) | 0;
+
+        let sumRX = 0, sumGX = 0, sumBX = 0;
+        let sumRY = 0, sumGY = 0, sumBY = 0;
+
+        for (let row = y - 1; row <= y + 1; row++) {
+            if (row < 0) {
+                continue;
+            }
+            if (row >= oldImageData.height) {
+                break;
+            }
+
+            const gxRow = row - (y - 1);
+
+            for (let col = x - 1; col <= x + 1; col++) {
+                if (col < 0) {
+                    continue;
+                }
+                if (col >= oldImageData.width) {
+                    break;
+                }
+
+                const gxCol = col - (x - 1);
+                const index = (row * oldImageData.width + col) * 4;
+
+                sumRX += oldData[index] * gx[gxRow][gxCol];
+                sumGX += oldData[index + 1] * gx[gxRow][gxCol];
+                sumBX += oldData[index + 2] * gx[gxRow][gxCol];
+
+                sumRY += oldData[index] * gy[gxRow][gxCol];
+                sumGY += oldData[index + 1] * gy[gxRow][gxCol];
+                sumBY += oldData[index + 2] * gy[gxRow][gxCol];
+            }
+        }
+
+        newData[i] = Math.sqrt(sumRX * sumRX + sumRY * sumRY) | 0;
+        newData[i + 1] = Math.sqrt(sumGX * sumGX + sumGY * sumGY) | 0;
+        newData[i + 2] = Math.sqrt(sumBX * sumBX + sumBY * sumBY) | 0;
         newData[i + 3] = oldData[i + 3];
     }
 
