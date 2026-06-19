@@ -1,5 +1,5 @@
 export function filter(ctx, filter) {
-    const filters = { greyscale, sepia, invert, blur, edges };
+    const filters = { greyscale, sepia, invert, blur, edges, sharpen };
     const filterFunc = filters[filter];
 
     if (filterFunc) {
@@ -187,6 +187,62 @@ export function edges(ctx) {
         newData[i] = Math.sqrt(sumRX * sumRX + sumRY * sumRY) | 0;
         newData[i + 1] = Math.sqrt(sumGX * sumGX + sumGY * sumGY) | 0;
         newData[i + 2] = Math.sqrt(sumBX * sumBX + sumBY * sumBY) | 0;
+        newData[i + 3] = oldData[i + 3];
+    }
+
+    ctx.putImageData(newImageData, 0, 0);
+}
+
+export function sharpen(ctx) {
+    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const newImageData = ctx.createImageData(oldImageData);
+
+    const oldData = oldImageData.data;
+    const newData = newImageData.data;
+
+    const kernel = [
+        [0, -1, 0],
+        [-1, 5, -1],
+        [0, -1, 0]
+    ]
+
+    for (let i = 0; i < oldData.length; i += 4) {
+        const pixelIndex = (i / 4) | 0;
+        const x = pixelIndex % oldImageData.width;
+        const y = (pixelIndex / oldImageData.width) | 0;
+
+        let newR = 0, newG = 0, newB = 0;
+
+        for (let row = y - 1; row <= y + 1; row++) {
+            if (row < 0) {
+                continue;
+            }
+            else if (row >= oldImageData.height) {
+                break;
+            }
+
+            const kRow = row - (y - 1);
+
+            for (let col = x - 1; col <= x + 1; col++) {
+                if (col < 0) {
+                    continue;
+                }
+                else if (col >= oldImageData.width) {
+                    break;
+                }
+
+                const kCol = col - (x - 1);
+                const index = (row * oldImageData.width + col) * 4;
+
+                newR += oldData[index] * kernel[kRow][kCol];
+                newG += oldData[index + 1] * kernel[kRow][kCol];
+                newB += oldData[index + 2] * kernel[kRow][kCol];
+            }
+        }
+
+        newData[i] = newR;
+        newData[i + 1] = newG;
+        newData[i + 2] = newB;
         newData[i + 3] = oldData[i + 3];
     }
 
