@@ -2,15 +2,15 @@
 
 ## Done
 - [x] Add ability to select image file and draw it on canvas
+- [x] Reset function
+- [x] Ability to increase and decrease brightness
+- [x] Ability to increase and decrease contrast
+- [x] Exporting
 
 ### Filters
 - [x] Greyscale
-- [x] Reset function
-- [x] Exporting
 - [x] Sepia
 - [x] Invert
-- [x] Ability to increase and decrease brightness
-- [x] Ability to increase and decrease contrast
 - [x] Blur
 - [x] Edge-detection (Sobel)
 - [x] Sharpen (Laplacian)
