@@ -15,9 +15,10 @@
 - [x] Edge-detection (Sobel)
 - [x] Sharpen (Laplacian)
 
+- [x] Split `helpers.js` into 2 or more files as it has gotten quite big
+
 ## Pending
 - [ ] Blur, Sobel, and sharpen have the same core logic; outsource that to a helper function
-- [ ] Split `helpers.js` into 2 or more files as it has gotten quite big
 - [ ] Make blur radius adjustable
 
 ### Image Transformations

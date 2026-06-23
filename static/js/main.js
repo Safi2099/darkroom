@@ -1,4 +1,6 @@
-import { filter, adjust, reset, imageOK, triggerDownload } from './helpers.js';
+import { reset, imageOK, triggerDownload } from './helpers.js';
+import { filter } from './filters.js';
+import { adjust } from './adjusts.js';
 
 const imageInput = document.getElementById('image-input');
 const canvasContainer = document.getElementById('canvas-container');
