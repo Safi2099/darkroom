@@ -19,7 +19,7 @@
 
 ## Pending
 - [ ] Blur, Sobel, and sharpen have the same core logic; outsource that to a helper function
-- [ ] Make blur radius adjustable
+- [ ] Add comments (It has only been a couple days and I'm already having trouble understanding everything)
 
 ### Image Transformations
 - [ ] Resize
@@ -27,7 +27,6 @@
 - [ ] Reflect
 
 - [ ] Finally make the move to C/WASM
-- [ ] Integrate the SQL and Python stuff (analytics)
 
 ### Better frontend
 - [ ] Sliders, buttons, selections, general frontend improvement
@@ -35,4 +34,3 @@
 - [ ] Visual image canvas
 - [ ] undo/redo
 
-- [ ] Add analytics (SQL and Python w/ `matplotlib`)

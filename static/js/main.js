@@ -1,6 +1,7 @@
 import { reset, imageOK, triggerDownload } from './helpers.js';
 import { filter } from './filters.js';
 import { adjust } from './adjusts.js';
+import { transform } from './transforms.js';
 
 const imageInput = document.getElementById('image-input');
 const canvasContainer = document.getElementById('canvas-container');
@@ -46,6 +47,9 @@ for (const operationButton of operationButtons) {
         }
         else if (type === 'adjust') {
             adjust(ctx, operationButton.dataset.name, operationButton.dataset.amount);
+        }
+        else if (type === 'transform') {
+            transform(ctx, operationButton.dataset.name);
         }
         else {
             reset(ctx, originalImageData);
