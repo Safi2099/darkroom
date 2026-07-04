@@ -1,4 +1,32 @@
-#canvas-container {
+.main-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.image-operations-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.canvas-container {
     display: flex;
     justify-content: center;
+    flex: 1;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+legend {
+    font-weight: bold;
+    margin-bottom: 5px;
 }

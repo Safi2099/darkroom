@@ -12,33 +12,51 @@
     </head>
 
     <body>
-        <input type="file" id="image-input" accept="image/png, image/jpeg, image/webp, image/bmp">
+        <div class="main-container">
+            <div class="image-operations-container">
+                <fieldset>
+                    <legend>Import</legend>
+                    <input type="file" id="image-input" accept="image/png, image/jpeg, image/webp, image/bmp">
+                </fieldset>
 
-        <input type="button" class="operation-btn" data-type="reset" value="Reset">
-        <input type="button" class="operation-btn" data-type="filter" data-name="greyscale" value="Greyscale">
-        <input type="button" class="operation-btn" data-type="filter" data-name="sepia" value="Sepia">
-        <input type="button" class="operation-btn" data-type="filter" data-name="invert" value="Invert">
-        <input type="button" class="operation-btn" data-type="filter" data-name="blur" value="Blur">
-        <input type="button" class="operation-btn" data-type="filter" data-name="edges" value="Edges">
-        <input type="button" class="operation-btn" data-type="filter" data-name="sharpen" value="Sharpen">
+                <fieldset>
+                    <legend>Filters</legend>
+                    <button type="button" class="operation-btn" data-type="reset">Reset</button>
+                    <button type="button" class="operation-btn" data-type="filter" data-name="greyscale">Greyscale</button>
+                    <button type="button" class="operation-btn" data-type="filter" data-name="sepia">Sepia</button>
+                    <button type="button" class="operation-btn" data-type="filter" data-name="invert">Invert</button>
+                    <button type="button" class="operation-btn" data-type="filter" data-name="blur">Blur</button>
+                    <button type="button" class="operation-btn" data-type="filter" data-name="edges">Edges</button>
+                    <button type="button" class="operation-btn" data-type="filter" data-name="sharpen">Sharpen</button>
+                </fieldset>
 
-        <input type="button" class="operation-btn" data-type="adjust" data-name="brightness" data-amount="10" value="Brightness +10">
-        <input type="button" class="operation-btn" data-type="adjust" data-name="brightness" data-amount="-10" value="Brightness -10">
-        <input type="button" class="operation-btn" data-type="adjust" data-name="contrast" data-amount="1.1" value="Contrast +10%">
-        <input type="button" class="operation-btn" data-type="adjust" data-name="contrast" data-amount="0.9" value="Contrast -10%">
+                <fieldset>
+                    <legend>Adjustments</legend>
+                    <button type="button" class="operation-btn" data-type="adjust" data-name="brightness" data-amount="10">Brightness +10</button>
+                    <button type="button" class="operation-btn" data-type="adjust" data-name="brightness" data-amount="-10">Brightness -10</button>
+                    <button type="button" class="operation-btn" data-type="adjust" data-name="contrast" data-amount="1.1">Contrast +10%</button>
+                    <button type="button" class="operation-btn" data-type="adjust" data-name="contrast" data-amount="0.9">Contrast -10%</button>
+                </fieldset>
 
-        <input type="button" class="operation-btn" data-type="transform" data-name="reflect" value="Reflect">
+                <fieldset>
+                    <legend>Transformations</legend>
+                    <button type="button" class="operation-btn" data-type="transform" data-name="reflect">Reflect</button>
+                </fieldset>
 
-        <label>Export As:</label>
-        <select id="export-dropdown">
-            <option selected disabled value="">Format</option>
-            <option value="image/jpeg">JPEG</option>
-            <option value="image/png">PNG</option>
-            <option value="image/webp">WebP</option>
-        </select>
-        <input type="button" id="export-button" value="Export">
+                <fieldset>
+                    <legend>Export</legend>
+                    <select id="export-dropdown">
+                        <option selected disabled value="">Format</option>
+                        <option value="image/jpeg">JPEG</option>
+                        <option value="image/png">PNG</option>
+                        <option value="image/webp">WebP</option>
+                    </select>
+                    <button type="button" id="export-button">Export</button>
+                </fieldset>
+            </div>
 
-        <div id="canvas-container"></div>
+            <div class="canvas-container"></div>
+        </div>
 
         <script type="module" src="/static/js/main.js"></script>
     </body>

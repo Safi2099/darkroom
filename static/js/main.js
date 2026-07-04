@@ -4,7 +4,7 @@ import { adjust } from './adjusts.js';
 import { transform } from './transforms.js';
 
 const imageInput = document.getElementById('image-input');
-const canvasContainer = document.getElementById('canvas-container');
+const canvasContainer = document.querySelector('.canvas-container');
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 let originalImageData;
