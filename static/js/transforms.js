@@ -1,11 +1,36 @@
 export function transform(ctx, transform) {
-    console.log('bananas');
-    const transforms = { reflect };
-    const tranformFunc = transforms[transform];
+    const transforms = { reflect, resize };
+    const transformFunc = transforms[transform];
 
-    if (tranformFunc) {
-        tranformFunc(ctx);
-        console.log('reflect called');
+    if (transformFunc === resize) {
+        const ratio = ctx.canvas.width / ctx.canvas.height;
+        const inputDialog = document.getElementById('resize-dialog');
+        const widthInput = document.getElementById('resize-width-input');
+        const heightText = document.getElementById('resize-height-text');
+        const dialogForm = document.getElementById('resize-form');
+        let width;
+        let height;
+
+        inputDialog.showModal();
+
+        widthInput.addEventListener('input', function(event) {
+            heightText.textContent = Math.round(Number(event.target.value) / ratio);
+        });
+
+        dialogForm.addEventListener('submit', function() {
+            width = Number(widthInput.value);
+            height = Number(heightText.textContent);
+
+            widthInput.value = '';
+            heightText.textContent = '';
+
+            if (width > 0 && height > 0) {
+                transformFunc(ctx, width, height);
+            }
+        });
+    }
+    else {
+        transformFunc(ctx);
     }
 }
 
@@ -47,8 +72,7 @@ export function reflect(ctx) {
     ctx.putImageData(imageData, 0, 0);
 }
 
-export function resize(ctx) {
-
+export function resize(ctx, width, height) {
 }
 
 export function crop(ctx) {

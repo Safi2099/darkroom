@@ -41,6 +41,18 @@
                 <fieldset>
                     <legend>Transformations</legend>
                     <button type="button" class="operation-btn" data-type="transform" data-name="reflect">Reflect</button>
+                    <button type="button" class="operation-btn" data-type="transform" data-name="resize" id="resize-button">Resize</button>
+
+                    <dialog id="resize-dialog">
+                        <form method="dialog" id="resize-form">
+                            <label for="resize-width-input">Width:</label>
+                            <input type="number" id="resize-width-input">
+                            <br>
+                            <label>Height: <em><span id="resize-height-text"></span></em> (auto)</label>
+                            <br><br>
+                            <button type="submit">Confirm</button>
+                        </form>
+                    </dialog>
                 </fieldset>
 
                 <fieldset>
