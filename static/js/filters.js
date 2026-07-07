@@ -60,7 +60,7 @@ export function blur(ctx) {
     const newData = newImageData.data;
 
     for (let i = 0; i < oldData.length; i += 4) {
-        const pixelIndex = (i / 4) | 0;
+        const pixelIndex = i / 4;
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 
@@ -121,7 +121,7 @@ export function edges(ctx) {
     ]
 
     for (let i = 0; i < oldData.length; i += 4) {
-        const pixelIndex = (i / 4) | 0;
+        const pixelIndex = i / 4;
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 
@@ -182,7 +182,7 @@ export function sharpen(ctx) {
     ]
 
     for (let i = 0; i < oldData.length; i += 4) {
-        const pixelIndex = (i / 4) | 0;
+        const pixelIndex = i / 4;
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 

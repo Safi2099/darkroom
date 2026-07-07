@@ -11,5 +11,7 @@ export function triggerDownload(blobURL) {
 }
 
 export function reset(ctx, originalImageData) {
+    ctx.canvas.width = originalImageData.width;
+    ctx.canvas.height = originalImageData.height;
     ctx.putImageData(originalImageData, 0, 0);
 }
