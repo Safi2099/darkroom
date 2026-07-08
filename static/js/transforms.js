@@ -24,7 +24,8 @@ export function transform(ctx, transform) {
             widthInput.value = '';
             heightText.textContent = '';
 
-            if (width > 0 && height > 0) {
+            // 4K image is the cap
+            if (width > 0 && width <= 3840 && height > 0 && height <= 2160) {
                 transformFunc(ctx, width, height);
             }
         });
