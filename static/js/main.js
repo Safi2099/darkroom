@@ -4,8 +4,9 @@ import { adjust } from './adjusts.js';
 import { transform } from './transforms.js';
 
 const imageInput = document.getElementById('image-input');
-const canvasContainer = document.querySelector('.canvas-container');
+const canvasStack = document.querySelector('.canvas-stack');
 const canvas = document.createElement('canvas');
+canvas.id = 'canvas';
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 let originalImageData;
 let currentObjectURL;
@@ -14,7 +15,7 @@ let image;
 imageInput.addEventListener('change', function() {
     const imageFile = imageInput.files[0];
     if (imageFile) {
-        canvasContainer.appendChild(canvas);
+        canvasStack.appendChild(canvas);
         image = new Image();
 
         if (currentObjectURL) {

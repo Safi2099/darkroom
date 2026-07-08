@@ -22,9 +22,9 @@
 - [ ] Add comments (It has only been a couple days and I'm already having trouble understanding everything)
 
 ### Image Transformations
-- [ ] Resize
-- [ ] Crop
-- [ ] Reflect
+- [x] Resize
+- [x] Crop
+- [x] Reflect
 
 - [ ] Finally make the move to C/WASM
 

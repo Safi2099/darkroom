@@ -41,8 +41,8 @@
                 <fieldset>
                     <legend>Transformations</legend>
                     <button type="button" class="operation-btn" data-type="transform" data-name="reflect">Reflect</button>
-                    <button type="button" class="operation-btn" data-type="transform" data-name="resize" id="resize-button">Resize</button>
 
+                    <button type="button" class="operation-btn" data-type="transform" data-name="resize" id="resize-button">Resize</button>
                     <dialog id="resize-dialog">
                         <form method="dialog" id="resize-form">
                             <label for="resize-width-input">Width:</label>
@@ -51,6 +51,15 @@
                             <label>Height: <em><span id="resize-height-text"></span></em> (auto)</label>
                             <br><br>
                             <button type="submit">Confirm</button>
+                        </form>
+                    </dialog>
+
+                    <button type="button" class="operation-btn" data-type="transform" data-name="crop" id="crop-button">Crop</button>
+                    <dialog id="crop-dialog">
+                        <form method="dialog">
+                            <p>Crop image?</p>
+                            <button value="apply">Apply</button>
+                            <button value="cancel">Cancel</button>
                         </form>
                     </dialog>
                 </fieldset>
@@ -67,7 +76,9 @@
                 </fieldset>
             </div>
 
-            <div class="canvas-container"></div>
+            <div class="canvas-container">
+                <div class="canvas-stack"></div>
+            </div>
         </div>
 
         <script type="module" src="/static/js/main.js"></script>

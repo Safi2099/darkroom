@@ -14,7 +14,20 @@
 .canvas-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 100vh;
     flex: 1;
+}
+
+.canvas-stack {
+    position: relative;
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
 }
 
 fieldset {

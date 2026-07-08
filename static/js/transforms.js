@@ -1,34 +1,14 @@
+import { runResizeDialog, runCropMode } from './transform_ui.js';
+
 export function transform(ctx, transform) {
-    const transforms = { reflect, resize };
+    const transforms = { reflect, resize, crop };
     const transformFunc = transforms[transform];
 
     if (transformFunc === resize) {
-        const ratio = ctx.canvas.width / ctx.canvas.height;
-        const inputDialog = document.getElementById('resize-dialog');
-        const widthInput = document.getElementById('resize-width-input');
-        const heightText = document.getElementById('resize-height-text');
-        const dialogForm = document.getElementById('resize-form');
-        let width;
-        let height;
-
-        inputDialog.showModal();
-
-        widthInput.addEventListener('input', function(event) {
-            heightText.textContent = Math.round(Number(event.target.value) / ratio);
-        });
-
-        dialogForm.addEventListener('submit', function() {
-            width = Number(widthInput.value);
-            height = Number(heightText.textContent);
-
-            widthInput.value = '';
-            heightText.textContent = '';
-
-            // 4K image is the cap
-            if (width > 0 && width <= 3840 && height > 0 && height <= 2160) {
-                transformFunc(ctx, width, height);
-            }
-        });
+        runResizeDialog(ctx, transformFunc);
+    }
+    else if (transformFunc === crop) {
+        runCropMode(ctx, transformFunc);
     }
     else {
         transformFunc(ctx);
@@ -128,4 +108,3 @@ export function crop(ctx, cropX, cropY, width, height) {
     ctx.canvas.height = height;
     ctx.putImageData(newImageData, 0, 0);
 }
-
