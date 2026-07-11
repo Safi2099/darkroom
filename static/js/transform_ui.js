@@ -47,6 +47,10 @@ export function runCropMode(ctx, crop) {
     }
 
     function onMouseUp() {
+        if (!cropRect) {
+            return;
+        }
+
         mousePressed = false;
         dialog.showModal();
         dialog.addEventListener('close', dialogFunc, { once: true });
