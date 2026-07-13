@@ -6,17 +6,20 @@ export function transform(ctx, transform) {
 
     if (transformFunc === resize) {
         runResizeDialog(ctx, transformFunc);
-    }
-    else if (transformFunc === crop) {
+    } else if (transformFunc === crop) {
         runCropMode(ctx, transformFunc);
-    }
-    else {
+    } else {
         transformFunc(ctx);
     }
 }
 
 export function reflect(ctx) {
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const data = imageData.data;
 
     const width = imageData.width;
@@ -54,7 +57,12 @@ export function reflect(ctx) {
 }
 
 export function resize(ctx, newWidth, newHeight) {
-    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const oldImageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const oldData = oldImageData.data;
     const oldWidth = oldImageData.width;
     const oldHeight = oldImageData.height;
@@ -83,7 +91,12 @@ export function resize(ctx, newWidth, newHeight) {
 }
 
 export function crop(ctx, cropX, cropY, width, height) {
-    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const oldImageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const oldData = oldImageData.data;
 
     const newImageData = ctx.createImageData(width, height);

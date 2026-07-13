@@ -8,7 +8,12 @@ export function adjust(ctx, adjust, amount) {
 }
 
 export function brightness(ctx, amount) {
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const data = imageData.data;
     amount = Number(amount);
 
@@ -22,7 +27,12 @@ export function brightness(ctx, amount) {
 }
 
 export function contrast(ctx, amount) {
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const data = imageData.data;
     const mid = 128;
     amount = Number(amount);

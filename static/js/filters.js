@@ -8,7 +8,12 @@ export function filter(ctx, filter) {
 }
 
 export function greyscale(ctx) {
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
@@ -23,13 +28,21 @@ export function greyscale(ctx) {
 }
 
 export function sepia(ctx) {
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
-        const sepiaRed = (.393 * data[i] + .769 * data[i + 1] + .189 * data[i + 2]) | 0;
-        const sepiaGreen = (.349 * data[i] + .686 * data[i + 1] + .168 * data[i + 2]) | 0;
-        const sepiaBlue = (.272 * data[i] + .534 * data[i + 1] + .131 * data[i + 2]) | 0;
+        const sepiaRed =
+            (0.393 * data[i] + 0.769 * data[i + 1] + 0.189 * data[i + 2]) | 0;
+        const sepiaGreen =
+            (0.349 * data[i] + 0.686 * data[i + 1] + 0.168 * data[i + 2]) | 0;
+        const sepiaBlue =
+            (0.272 * data[i] + 0.534 * data[i + 1] + 0.131 * data[i + 2]) | 0;
 
         data[i] = sepiaRed;
         data[i + 1] = sepiaGreen;
@@ -40,7 +53,12 @@ export function sepia(ctx) {
 }
 
 export function invert(ctx) {
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
@@ -53,7 +71,12 @@ export function invert(ctx) {
 }
 
 export function blur(ctx) {
-    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const oldImageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const newImageData = ctx.createImageData(oldImageData);
 
     const oldData = oldImageData.data;
@@ -64,23 +87,23 @@ export function blur(ctx) {
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 
-        let sumR = 0, sumG = 0, sumB = 0;
+        let sumR = 0,
+            sumG = 0,
+            sumB = 0;
 
         let divisor = 0;
 
         for (let row = y - 1; row <= y + 1; row++) {
             if (row < 0) {
                 continue;
-            }
-            else if (row >= oldImageData.height) {
+            } else if (row >= oldImageData.height) {
                 break;
             }
 
             for (let col = x - 1; col <= x + 1; col++) {
                 if (col < 0) {
                     continue;
-                }
-                else if (col >= oldImageData.width) {
+                } else if (col >= oldImageData.width) {
                     break;
                 }
 
@@ -102,7 +125,12 @@ export function blur(ctx) {
 }
 
 export function edges(ctx) {
-    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const oldImageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const newImageData = ctx.createImageData(oldImageData);
 
     const oldData = oldImageData.data;
@@ -118,15 +146,19 @@ export function edges(ctx) {
         [-1, -2, -1],
         [0, 0, 0],
         [1, 2, 1],
-    ]
+    ];
 
     for (let i = 0; i < oldData.length; i += 4) {
         const pixelIndex = i / 4;
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 
-        let sumRX = 0, sumGX = 0, sumBX = 0;
-        let sumRY = 0, sumGY = 0, sumBY = 0;
+        let sumRX = 0,
+            sumGX = 0,
+            sumBX = 0;
+        let sumRY = 0,
+            sumGY = 0,
+            sumBY = 0;
 
         for (let row = y - 1; row <= y + 1; row++) {
             if (row < 0) {
@@ -169,7 +201,12 @@ export function edges(ctx) {
 }
 
 export function sharpen(ctx) {
-    const oldImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const oldImageData = ctx.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height,
+    );
     const newImageData = ctx.createImageData(oldImageData);
 
     const oldData = oldImageData.data;
@@ -178,21 +215,22 @@ export function sharpen(ctx) {
     const kernel = [
         [0, -1, 0],
         [-1, 5, -1],
-        [0, -1, 0]
-    ]
+        [0, -1, 0],
+    ];
 
     for (let i = 0; i < oldData.length; i += 4) {
         const pixelIndex = i / 4;
         const x = pixelIndex % oldImageData.width;
         const y = (pixelIndex / oldImageData.width) | 0;
 
-        let newR = 0, newG = 0, newB = 0;
+        let newR = 0,
+            newG = 0,
+            newB = 0;
 
         for (let row = y - 1; row <= y + 1; row++) {
             if (row < 0) {
                 continue;
-            }
-            else if (row >= oldImageData.height) {
+            } else if (row >= oldImageData.height) {
                 break;
             }
 
@@ -201,8 +239,7 @@ export function sharpen(ctx) {
             for (let col = x - 1; col <= x + 1; col++) {
                 if (col < 0) {
                     continue;
-                }
-                else if (col >= oldImageData.width) {
+                } else if (col >= oldImageData.width) {
                     break;
                 }
 
@@ -223,4 +260,3 @@ export function sharpen(ctx) {
 
     ctx.putImageData(newImageData, 0, 0);
 }
-

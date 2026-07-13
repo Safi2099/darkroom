@@ -19,7 +19,7 @@ export function runCropMode(ctx, crop) {
     let currentX;
     let currentY;
     let cropRect;
-    document.body.style.cursor = "crosshair";
+    document.body.style.cursor = 'crosshair';
 
     function onMouseDown(event) {
         startX = event.offsetX;
@@ -61,7 +61,7 @@ export function runCropMode(ctx, crop) {
             crop(ctx, cropRect.x, cropRect.y, cropRect.width, cropRect.height);
         }
 
-        document.body.style.cursor = "default";
+        document.body.style.cursor = 'default';
         overlay.remove();
 
         canvas.removeEventListener('mousedown', onMouseDown);

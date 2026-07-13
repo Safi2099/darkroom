@@ -1,78 +1,109 @@
+import createModule from '../wasm/wasm.js';
 import { reset, imageOK, triggerDownload } from './helpers.js';
 import { filter } from './filters.js';
 import { adjust } from './adjusts.js';
 import { transform } from './transforms.js';
 
-const imageInput = document.getElementById('image-input');
-const canvasStack = document.querySelector('.canvas-stack');
-const canvas = document.createElement('canvas');
-canvas.id = 'canvas';
-const ctx = canvas.getContext('2d', { willReadFrequently: true });
-let originalImageData;
-let currentObjectURL;
-let image;
+async function main() {
+    const Module = await createModule();
+    const state = createState(Module);
 
-imageInput.addEventListener('change', function() {
-    const imageFile = imageInput.files[0];
-    if (imageFile) {
-        canvasStack.appendChild(canvas);
-        image = new Image();
+    setupImageInput(state);
+    setupOperations(state);
+    setupExport(state);
+}
 
-        if (currentObjectURL) {
-            URL.revokeObjectURL(currentObjectURL);
-        }
+function createState(Module) {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'canvas';
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        image.src = URL.createObjectURL(imageFile);
-        currentObjectURL = image.src;
+    return {
+        Module,
+        canvas,
+        ctx,
+        image: null,
+        originalImageData: null,
+        originalWidth: null,
+        originalHeight: null,
+        originalImagePtr: null,
+        currentImagePtr: null,
+    };
+}
 
-        image.onload = function() {
-            canvas.width = image.naturalWidth;
-            canvas.height = image.naturalHeight;
+function setupImageInput(state) {
+    const imageInput = document.getElementById('image-input');
+    const canvasStack = document.querySelector('.canvas-stack');
+    let currentObjectURL;
 
-            ctx.drawImage(image, 0, 0);
-            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        }
-    }
-});
+    imageInput.addEventListener('change', () => {
+        const imageFile = imageInput.files[0];
+        if (imageFile) {
+            canvasStack.appendChild(state.canvas);
+            state.image = new Image();
 
-const operationButtons = document.querySelectorAll('.operation-btn');
-for (const operationButton of operationButtons) {
-    operationButton.addEventListener('click', function() {
-        if (!imageOK(image)) {
-            return;
-        }
+            if (currentObjectURL) {
+                URL.revokeObjectURL(currentObjectURL);
+            }
 
-        const type = operationButton.dataset.type;
-        if (type === 'filter') {
-            filter(ctx, operationButton.dataset.name);
-        }
-        else if (type === 'adjust') {
-            adjust(ctx, operationButton.dataset.name, operationButton.dataset.amount);
-        }
-        else if (type === 'transform') {
-            transform(ctx, operationButton.dataset.name);
-        }
-        else {
-            reset(ctx, originalImageData);
+            state.image.src = URL.createObjectURL(imageFile);
+            currentObjectURL = state.image.src;
+
+            state.image.onload = function () {
+                canvas.width = state.image.naturalWidth;
+                canvas.height = state.image.naturalHeight;
+                state.originalWidth = canvas.width;
+                state.originalHeight = canvas.height;
+
+                state.ctx.drawImage(state.image, 0, 0);
+                state.originalImageData = state.ctx.getImageData(
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height,
+                );
+            };
         }
     });
 }
 
-const exportButton = document.getElementById('export-button');
-const exportDropdown = document.getElementById('export-dropdown');
+function setupOperations(state) {
+    document.querySelectorAll('.operation-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+            if (!imageOK(state.image)) {
+                return;
+            }
 
-exportButton.addEventListener('click', function() {
-    if (!imageOK(image, originalImageData)) {
-        console.log('image not loaded yet');
-        return;
-    }
-    else if (!exportDropdown.value) {
-        console.log('format not selected');
-        return;
-    }
+            const type = button.dataset.type;
+            if (type === 'filter') {
+                filter(state.ctx, button.dataset.name);
+            } else if (type === 'adjust') {
+                adjust(state.ctx, button.dataset.name, button.dataset.amount);
+            } else if (type === 'transform') {
+                transform(state.ctx, button.dataset.name);
+            } else {
+                reset(state.ctx, state.originalImageData);
+            }
+        });
+    });
+}
 
-    canvas.toBlob(function(blob) {
-        const url = URL.createObjectURL(blob);
-        triggerDownload(url);
-    }, exportDropdown.value);
-});
+function setupExport(state) {
+    const exportButton = document.getElementById('export-button');
+    const exportDropdown = document.getElementById('export-dropdown');
+
+    exportButton.addEventListener('click', () => {
+        if (!imageOK(state.image, state.originalImageData)) {
+            return;
+        } else if (!exportDropdown.value) {
+            return;
+        }
+
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            triggerDownload(url);
+        }, exportDropdown.value);
+    });
+}
+
+main().catch(console.error);
