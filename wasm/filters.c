@@ -4,12 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Clamp an RGB value
-static inline int clamp(int x)
-{
-    return (x > 255) ? 255 : ((x < 0) ? 0 : x);
-}
-
 // Apply greyscale filter to image
 EMSCRIPTEN_KEEPALIVE
 void greyscale(Pixel *image, int width, int height)

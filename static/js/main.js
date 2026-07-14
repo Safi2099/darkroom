@@ -74,7 +74,7 @@ function setupOperations(state) {
             if (type === 'filter') {
                 filter(state, button.dataset.name);
             } else if (type === 'adjust') {
-                adjust(state.ctx, button.dataset.name, button.dataset.amount);
+                adjust(state, button.dataset.name, button.dataset.amount);
             } else if (type === 'transform') {
                 transform(state.ctx, button.dataset.name);
             }
