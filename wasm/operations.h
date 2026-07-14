@@ -8,6 +8,6 @@ typedef struct
     uint8_t r, g, b, a;
 } Pixel;
 
-#define PIXEL(image, x, y, width) ((image)[((y) * (width)) + (x)])
+#define PIXEL(image, i, j, width) ((image)[((i) * (width)) + (j)])
 
 #endif

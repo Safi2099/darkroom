@@ -39,3 +39,9 @@ void reset_c(Pixel *original_buffer, Pixel *current_buffer, size_t num_bytes)
         memcpy(current_buffer, original_buffer, num_bytes);
     }
 }
+
+EMSCRIPTEN_KEEPALIVE
+void free_prev(Pixel *buffer)
+{
+    free(buffer);
+}
