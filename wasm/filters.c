@@ -14,7 +14,7 @@ void greyscale(Pixel *image, int width, int height)
         {
             Pixel *p = &PIXEL(image, i, j, width);
 
-            int average = round((p->r + p->g + p->b) / 3.0);
+            int average = (int) ((p->r + p->g + p->b) / 3.0 + 0.5f);
             p->r = average;
             p->g = average;
             p->b = average;
@@ -36,9 +36,9 @@ void sepia(Pixel *image, int width, int height)
             int orig_g = p->g;
             int orig_b = p->b;
 
-            p->r = clamp(round(.393 * orig_r + .769 * orig_g + .189 * orig_b));
-            p->g = clamp(round(.349 * orig_r + .686 * orig_g + .168 * orig_b));
-            p->b = clamp(round(.272 * orig_r + .534 * orig_g + .131 * orig_b));
+            p->r = clamp((int) (.393 * orig_r + .769 * orig_g + .189 * orig_b + 0.5f));
+            p->g = clamp((int) (.349 * orig_r + .686 * orig_g + .168 * orig_b + 0.5f));
+            p->b = clamp((int) (.272 * orig_r + .534 * orig_g + .131 * orig_b + 0.5f));
         }
     }
 }
@@ -109,9 +109,9 @@ void blur(Pixel *image, int width, int height)
 
             Pixel *p = &PIXEL(image, i, j, width);
 
-            p->r = round(sum_red / divisor);
-            p->g = round(sum_green / divisor);
-            p->b = round(sum_blue / divisor);
+            p->r = (int) (sum_red / divisor + 0.5f);
+            p->g = (int) (sum_green / divisor + 0.5f);
+            p->b = (int) (sum_blue / divisor + 0.5f);
         }
     }
 
@@ -178,9 +178,9 @@ void edges(Pixel *image, int width, int height)
 
             Pixel *p = &PIXEL(image, i, j, width);
 
-            p->r = clamp(round(sqrt(sum_redx * sum_redx + sum_redy * sum_redy)));
-            p->g = clamp(round(sqrt(sum_greenx * sum_greenx + sum_greeny * sum_greeny)));
-            p->b = clamp(round(sqrt(sum_bluex * sum_bluex + sum_bluey * sum_bluey)));
+            p->r = clamp((int) (sqrt(sum_redx * sum_redx + sum_redy * sum_redy) + 0.5f));
+            p->g = clamp((int) (sqrt(sum_greenx * sum_greenx + sum_greeny * sum_greeny) + 0.5f));
+            p->b = clamp((int) (sqrt(sum_bluex * sum_bluex + sum_bluey * sum_bluey) + 0.5f));
         }
     }
 
