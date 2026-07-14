@@ -1,76 +1,57 @@
-export function filter(ctx, filter) {
-    const filters = { greyscale, sepia, invert, blur, edges, sharpen };
+import { updateCanvas } from './helpers.js';
+
+let inited = false;
+let greyscale = null;
+let sepia = null;
+let invert = null;
+let resetC = null;
+
+export function filter(state, filter) {
+    if (!inited) {
+        initFilters(state.Module);
+    }
+
+    const filters = { greyscale, sepia, invert, reset, blur, edges, sharpen };
     const filterFunc = filters[filter];
 
-    if (filterFunc) {
-        filterFunc(ctx);
+    if (
+        filterFunc === greyscale ||
+        filterFunc === sepia ||
+        filterFunc === invert
+    ) {
+        filterFunc(
+            state.currentImagePtr,
+            state.ctx.canvas.width,
+            state.ctx.canvas.height,
+        );
+        updateCanvas(state);
+    } else if (filterFunc === reset) {
+        filterFunc(state);
+    } else {
+        filterFunc(state.ctx);
     }
 }
 
-export function greyscale(ctx) {
-    const imageData = ctx.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height,
-    );
-    const data = imageData.data;
+function initFilters(Module) {
+    greyscale = Module.cwrap('greyscale', 'null', [
+        'number',
+        'number',
+        'number',
+    ]);
 
-    for (let i = 0; i < data.length; i += 4) {
-        const average = ((data[i] + data[i + 1] + data[i + 2]) / 3) | 0;
+    sepia = Module.cwrap('sepia', 'null', ['number', 'number', 'number']);
+    invert = Module.cwrap('invert', 'null', ['number', 'number', 'number']);
+    resetC = Module.cwrap('reset_c', 'null', ['number', 'number', 'number']);
 
-        data[i] = average;
-        data[i + 1] = average;
-        data[i + 2] = average;
-    }
-
-    ctx.putImageData(imageData, 0, 0);
+    inited = true;
 }
 
-export function sepia(ctx) {
-    const imageData = ctx.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height,
-    );
-    const data = imageData.data;
-
-    for (let i = 0; i < data.length; i += 4) {
-        const sepiaRed =
-            (0.393 * data[i] + 0.769 * data[i + 1] + 0.189 * data[i + 2]) | 0;
-        const sepiaGreen =
-            (0.349 * data[i] + 0.686 * data[i + 1] + 0.168 * data[i + 2]) | 0;
-        const sepiaBlue =
-            (0.272 * data[i] + 0.534 * data[i + 1] + 0.131 * data[i + 2]) | 0;
-
-        data[i] = sepiaRed;
-        data[i + 1] = sepiaGreen;
-        data[i + 2] = sepiaBlue;
-    }
-
-    ctx.putImageData(imageData, 0, 0);
+function reset(state) {
+    resetC(state.originalImagePtr, state.currentImagePtr, state.numBytes);
+    updateCanvas(state);
 }
 
-export function invert(ctx) {
-    const imageData = ctx.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height,
-    );
-    const data = imageData.data;
-
-    for (let i = 0; i < data.length; i += 4) {
-        for (let j = i; j < i + 3; j++) {
-            data[j] = 255 - data[j];
-        }
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-}
-
-export function blur(ctx) {
+function blur(ctx) {
     const oldImageData = ctx.getImageData(
         0,
         0,
@@ -124,7 +105,7 @@ export function blur(ctx) {
     ctx.putImageData(newImageData, 0, 0);
 }
 
-export function edges(ctx) {
+function edges(ctx) {
     const oldImageData = ctx.getImageData(
         0,
         0,
@@ -200,7 +181,7 @@ export function edges(ctx) {
     ctx.putImageData(newImageData, 0, 0);
 }
 
-export function sharpen(ctx) {
+function sharpen(ctx) {
     const oldImageData = ctx.getImageData(
         0,
         0,

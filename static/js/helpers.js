@@ -10,14 +10,8 @@ export function triggerDownload(blobURL) {
     URL.revokeObjectURL(blobURL);
 }
 
-export function reset(ctx, originalImageData) {
-    ctx.canvas.width = originalImageData.width;
-    ctx.canvas.height = originalImageData.height;
-    ctx.putImageData(originalImageData, 0, 0);
-}
-
 export function loadImageToC(state) {
-    if (!state.Module) {
+    if (!state.Module || !imageOK(state.image)) {
         return;
     }
 
@@ -28,22 +22,39 @@ export function loadImageToC(state) {
         state.ctx.canvas.height,
     );
 
-    const num_bytes = imageData.data.length;
-    const originalBuffPtr = state.Module.ccall(
+    state.numBytes = imageData.data.length;
+    state.originalImagePtr = state.Module.ccall(
         'init_original',
         'number',
         ['number'],
-        [num_bytes],
+        [state.numBytes],
     );
 
-    state.Module.HEAPU8.set(imageData.data, originalBuffPtr);
+    state.Module.HEAPU8.set(imageData.data, state.originalImagePtr);
 
-    const currentBuffPtr = state.Module.ccall(
+    state.currentImagePtr = state.Module.ccall(
         'init_current',
         'number',
         ['number', 'number'],
-        [num_bytes, originalBuffPtr],
+        [state.numBytes, state.originalImagePtr],
+    );
+}
+
+export function updateCanvas(state) {
+    const imageData = state.ctx.getImageData(
+        0,
+        0,
+        state.ctx.canvas.width,
+        state.ctx.canvas.height,
     );
 
-    return [originalBuffPtr, currentBuffPtr];
+    const newData = new Uint8ClampedArray(
+        state.Module.HEAPU8.buffer,
+        state.currentImagePtr,
+        state.numBytes,
+    );
+
+    imageData.data.set(newData);
+
+    state.ctx.putImageData(imageData, 0, 0);
 }

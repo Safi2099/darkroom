@@ -1,5 +1,5 @@
 import createModule from '../wasm/wasm.js';
-import { reset, imageOK, triggerDownload } from './helpers.js';
+import { imageOK, triggerDownload, loadImageToC } from './helpers.js';
 import { filter } from './filters.js';
 import { adjust } from './adjusts.js';
 import { transform } from './transforms.js';
@@ -22,8 +22,8 @@ function createState(Module) {
         Module,
         canvas,
         ctx,
+        numBytes: null,
         image: null,
-        originalImageData: null,
         originalWidth: null,
         originalHeight: null,
         originalImagePtr: null,
@@ -56,12 +56,8 @@ function setupImageInput(state) {
                 state.originalHeight = canvas.height;
 
                 state.ctx.drawImage(state.image, 0, 0);
-                state.originalImageData = state.ctx.getImageData(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height,
-                );
+
+                loadImageToC(state);
             };
         }
     });
@@ -76,13 +72,11 @@ function setupOperations(state) {
 
             const type = button.dataset.type;
             if (type === 'filter') {
-                filter(state.ctx, button.dataset.name);
+                filter(state, button.dataset.name);
             } else if (type === 'adjust') {
                 adjust(state.ctx, button.dataset.name, button.dataset.amount);
             } else if (type === 'transform') {
                 transform(state.ctx, button.dataset.name);
-            } else {
-                reset(state.ctx, state.originalImageData);
             }
         });
     });

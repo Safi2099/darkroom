@@ -21,7 +21,7 @@ Pixel *init_current(size_t num_bytes, Pixel *original_buffer)
     Pixel *current_buffer = malloc(num_bytes);
     if (current_buffer && original_buffer)
     {
-        memcpy(original_buffer, current_buffer, num_bytes);
+        memcpy(current_buffer, original_buffer, num_bytes);
     }
     else
     {
@@ -36,6 +36,6 @@ void reset_c(Pixel *original_buffer, Pixel *current_buffer, size_t num_bytes)
 {
     if (original_buffer && current_buffer)
     {
-        memcpy(original_buffer, current_buffer, num_bytes);
+        memcpy(current_buffer, original_buffer, num_bytes);
     }
 }
