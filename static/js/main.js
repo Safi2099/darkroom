@@ -76,7 +76,7 @@ function setupOperations(state) {
             } else if (type === 'adjust') {
                 adjust(state, button.dataset.name, button.dataset.amount);
             } else if (type === 'transform') {
-                transform(state.ctx, button.dataset.name);
+                transform(state, button.dataset.name);
             }
         });
     });

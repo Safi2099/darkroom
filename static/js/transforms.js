@@ -1,59 +1,42 @@
 import { runResizeDialog, runCropMode } from './transform_ui.js';
+import { updateCanvas } from './helpers.js';
 
-export function transform(ctx, transform) {
-    const transforms = { reflect, resize, crop };
+let fliph = null;
+let flipv = null;
+let initedTransforms = false;
+
+export function transform(state, transform) {
+    if (!initedTransforms) {
+        initTransforms(state.Module);
+    }
+
+    const transforms = { fliph, flipv, resize, crop };
     const transformFunc = transforms[transform];
 
-    if (transformFunc === resize) {
-        runResizeDialog(ctx, transformFunc);
-    } else if (transformFunc === crop) {
-        runCropMode(ctx, transformFunc);
-    } else {
-        transformFunc(ctx);
+    switch (transformFunc) {
+        case resize:
+            runResizeDialog(state.ctx, transformFunc);
+            break;
+        case crop:
+            runCropMode(state.ctx, transformFunc);
+            break;
+        case fliph:
+        case flipv:
+            transformFunc(
+                state.currentImagePtr,
+                state.ctx.canvas.width,
+                state.ctx.canvas.height,
+            );
+            updateCanvas(state);
+            break;
     }
 }
 
-export function reflect(ctx) {
-    const imageData = ctx.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height,
-    );
-    const data = imageData.data;
+function initTransforms(Module) {
+    fliph = Module.cwrap('flip_h', null, [...Array(3).fill('number')]);
+    flipv = Module.cwrap('flip_v', null, [...Array(3).fill('number')]);
 
-    const width = imageData.width;
-    const halfWidth = (width / 2) | 0;
-
-    for (let i = 0; i < data.length; i += 4) {
-        const pixelIndex = i / 4;
-        const x = pixelIndex % width;
-        const y = (pixelIndex / width) | 0;
-
-        if (x >= halfWidth) {
-            continue;
-        }
-
-        const oppositeX = width - x - 1;
-        const oppositeIndex = (y * width + oppositeX) * 4;
-
-        const leftR = data[i];
-        const leftG = data[i + 1];
-        const leftB = data[i + 2];
-        const leftA = data[i + 3];
-
-        data[i] = data[oppositeIndex];
-        data[i + 1] = data[oppositeIndex + 1];
-        data[i + 2] = data[oppositeIndex + 2];
-        data[i + 3] = data[oppositeIndex + 3];
-
-        data[oppositeIndex] = leftR;
-        data[oppositeIndex + 1] = leftG;
-        data[oppositeIndex + 2] = leftB;
-        data[oppositeIndex + 3] = leftA;
-    }
-
-    ctx.putImageData(imageData, 0, 0);
+    initedTransforms = true;
 }
 
 export function resize(ctx, newWidth, newHeight) {
