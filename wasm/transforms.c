@@ -64,4 +64,26 @@ Pixel *resize(Pixel *image, int old_width, int old_height, int new_width, int ne
 
 // Crop an image
 EMSCRIPTEN_KEEPALIVE
-void crop(Pixel *image, int width, int height) {}
+Pixel *crop(Pixel *image, int ow, int oh, int nw, int nh, int cx, int cy)
+{
+    size_t num_bytes = nw * nh * sizeof(Pixel);
+    Pixel *new = malloc(num_bytes);
+    if (new == NULL)
+    {
+        return NULL;
+    }
+
+    for (int i = 0; i < nh; i++)
+    {
+        for (int j = 0; j < nw; j++)
+        {
+            int old_x = cx + j;
+            int old_y = cy + i;
+
+            PIXEL(new, i, j, nw) = PIXEL(image, old_y, old_x, ow);
+        }
+    }
+
+    free(image);
+    return new;
+}

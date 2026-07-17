@@ -1,21 +1,22 @@
 import { updateCanvas } from './helpers.js';
 
-function callTransformWithReAlloc(state, transformFunc, width, height) {
+let cropModeActive = false;
+
+function callTransformWithReAlloc(state, transformFunc, nWidth, nHeight, args) {
     const tmp = transformFunc(
         state.currentImagePtr,
         state.ctx.canvas.width,
         state.ctx.canvas.height,
-        width,
-        height,
+        nWidth,
+        nHeight,
+        ...args,
     );
 
-    if (!tmp) {
-        return;
-    }
+    if (!tmp) return;
 
-    state.numBytes = width * height * 4;
-    state.ctx.canvas.width = width;
-    state.ctx.canvas.height = height;
+    state.numBytes = nWidth * nHeight * 4;
+    state.ctx.canvas.width = nWidth;
+    state.ctx.canvas.height = nHeight;
     state.currentImagePtr = tmp;
 
     updateCanvas(state);
@@ -50,12 +51,15 @@ export function runResizeDialog(state, resize) {
 
         // 4K image is the cap
         if (width > 0 && width <= 3840 && height > 0 && height <= 2160) {
-            callTransformWithReAlloc(state, resize, width, height);
+            callTransformWithReAlloc(state, resize, width, height, []);
         }
     }
 }
 
-export function runCropMode(ctx, crop) {
+export function runCropMode(state, crop) {
+    if (cropModeActive) return;
+    cropModeActive = true;
+
     const dialog = document.getElementById('crop-dialog');
     const canvas = document.getElementById('canvas');
     const canvasStack = document.querySelector('.canvas-stack');
@@ -65,8 +69,8 @@ export function runCropMode(ctx, crop) {
     canvasStack.appendChild(overlay);
 
     const overlayCtx = overlay.getContext('2d');
-    overlay.width = ctx.canvas.width;
-    overlay.height = ctx.canvas.height;
+    overlay.width = state.ctx.canvas.width;
+    overlay.height = state.ctx.canvas.height;
     overlayCtx.strokeStyle = 'red';
     overlayCtx.lineWidth = 2;
 
@@ -115,7 +119,15 @@ export function runCropMode(ctx, crop) {
 
     function dialogFunc() {
         if (dialog.returnValue === 'apply' && cropRect) {
-            crop(ctx, cropRect.x, cropRect.y, cropRect.width, cropRect.height);
+            callTransformWithReAlloc(
+                state,
+                crop,
+                cropRect.width,
+                cropRect.height,
+                [cropRect.x, cropRect.y],
+            );
+
+            cropModeActive = false;
         }
 
         document.body.style.cursor = 'default';
