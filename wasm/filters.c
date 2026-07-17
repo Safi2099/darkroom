@@ -64,7 +64,7 @@ void invert(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void blur(Pixel *image, int width, int height)
 {
-    size_t num_bytes = width * height * 4;
+    size_t num_bytes = width * height * sizeof(Pixel);
     Pixel *copy = malloc(num_bytes);
     if (copy == NULL)
     {
@@ -122,7 +122,7 @@ void blur(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void edges(Pixel *image, int width, int height)
 {
-    size_t num_bytes = width * height * 4;
+    size_t num_bytes = width * height * sizeof(Pixel);
     Pixel *copy = malloc(num_bytes);
     if (copy == NULL)
     {
@@ -191,7 +191,7 @@ void edges(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void sharpen(Pixel *image, int width, int height)
 {
-    size_t num_bytes = width * height * 4;
+    size_t num_bytes = width * height * sizeof(Pixel);
     Pixel *copy = malloc(num_bytes);
     if (copy == NULL)
     {

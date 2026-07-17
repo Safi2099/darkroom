@@ -40,7 +40,7 @@ void flip_v(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 Pixel *resize(Pixel *image, int old_width, int old_height, int new_width, int new_height)
 {
-    size_t num_bytes = new_width * new_height * 4;
+    size_t num_bytes = new_width * new_height * sizeof(Pixel);
     Pixel *new = malloc(num_bytes);
     if (new == NULL)
     {
