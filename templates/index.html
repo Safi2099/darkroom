@@ -7,7 +7,8 @@
         <meta name="viewport" content="initial-scale=1, width=device-width">
 
         <title>Darkroom</title>
-        <link href="/static/css/styles.css" rel="stylesheet">
+        <link rel="icon" href="data:,">
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 
     </head>
 
@@ -82,6 +83,6 @@
             </div>
         </div>
 
-        <script type="module" src="/static/js/main.js"></script>
+        <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
     </body>
 </html>
