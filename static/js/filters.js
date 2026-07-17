@@ -7,8 +7,6 @@ let blur = null;
 let edges = null;
 let sharpen = null;
 
-let resetC = null;
-
 let initedFilters = false;
 
 export function filter(state, filter) {
@@ -16,19 +14,19 @@ export function filter(state, filter) {
         initFilters(state.Module);
     }
 
-    const filters = { greyscale, sepia, invert, blur, edges, sharpen, reset };
+    const filters = { greyscale, sepia, invert, blur, edges, sharpen };
     const filterFunc = filters[filter];
 
-    if (filterFunc === reset) {
-        filterFunc(state);
-    } else {
-        filterFunc(
-            state.currentImagePtr,
-            state.ctx.canvas.width,
-            state.ctx.canvas.height,
-        );
-        updateCanvas(state);
+    if (!filterFunc) {
+        return;
     }
+
+    filterFunc(
+        state.currentImagePtr,
+        state.ctx.canvas.width,
+        state.ctx.canvas.height,
+    );
+    updateCanvas(state);
 }
 
 function initFilters(Module) {
@@ -39,12 +37,5 @@ function initFilters(Module) {
     edges = Module.cwrap('edges', null, ['number', 'number', 'number']);
     sharpen = Module.cwrap('sharpen', null, ['number', 'number', 'number']);
 
-    resetC = Module.cwrap('reset_c', null, ['number', 'number', 'number']);
-
     initedFilters = true;
-}
-
-function reset(state) {
-    resetC(state.originalImagePtr, state.currentImagePtr, state.numBytes);
-    updateCanvas(state);
 }

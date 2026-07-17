@@ -1,5 +1,5 @@
 import createModule from '../wasm/wasm.js';
-import { imageOK, triggerDownload, loadImageToC } from './helpers.js';
+import { imageOK, triggerDownload, syncImage, reset } from './helpers.js';
 import { filter } from './filters.js';
 import { adjust } from './adjusts.js';
 import { transform } from './transforms.js';
@@ -22,11 +22,9 @@ function createState(Module) {
         Module,
         canvas,
         ctx,
-        numBytes: null,
         image: null,
-        originalWidth: null,
-        originalHeight: null,
-        originalImagePtr: null,
+        originalImageData: null,
+        numBytes: null,
         currentImagePtr: null,
     };
 }
@@ -52,12 +50,10 @@ function setupImageInput(state) {
             state.image.onload = function () {
                 canvas.width = state.image.naturalWidth;
                 canvas.height = state.image.naturalHeight;
-                state.originalWidth = canvas.width;
-                state.originalHeight = canvas.height;
 
                 state.ctx.drawImage(state.image, 0, 0);
 
-                loadImageToC(state);
+                syncImage(state);
             };
         }
     });
@@ -77,6 +73,8 @@ function setupOperations(state) {
                 adjust(state, button.dataset.name, button.dataset.amount);
             } else if (type === 'transform') {
                 transform(state, button.dataset.name);
+            } else if (type === 'reset') {
+                reset(state);
             }
         });
     });
