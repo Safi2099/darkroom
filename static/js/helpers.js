@@ -54,12 +54,13 @@ export function updateCanvas(state) {
 }
 
 export function reset(state) {
-    if (!state.originalImageData || !state.currentImagePtr) {
+    if (!state.originalImageData || !state.currentImagePtr || !state.Module) {
         return;
     }
 
     state.ctx.canvas.width = state.originalImageData.width;
     state.ctx.canvas.height = state.originalImageData.height;
+
     state.numBytes = state.originalImageData.data.length;
 
     freePrev(state.currentImagePtr);

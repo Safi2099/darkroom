@@ -38,7 +38,29 @@ void flip_v(Pixel *image, int width, int height)
 
 // Resize an image (Nearest Neighbour)
 EMSCRIPTEN_KEEPALIVE
-void resize(Pixel *image, int width, int height) {}
+Pixel *resize(Pixel *image, int old_width, int old_height, int new_width, int new_height)
+{
+    size_t num_bytes = new_width * new_height * 4;
+    Pixel *new = malloc(num_bytes);
+    if (new == NULL)
+    {
+        return NULL;
+    }
+
+    for (int i = 0; i < new_height; i++)
+    {
+        for (int j = 0; j < new_width; j++)
+        {
+            int old_x = (j * old_width) / new_width;
+            int old_y = (i * old_height) / new_height;
+
+            PIXEL(new, i, j, new_width) = PIXEL(image, old_y, old_x, old_width);
+        }
+    }
+
+    free(image);
+    return new;
+}
 
 // Crop an image
 EMSCRIPTEN_KEEPALIVE

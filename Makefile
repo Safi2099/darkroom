@@ -7,7 +7,8 @@ SRCS = $(wildcard $(WASM_SRC_DIR)/*.c)
 
 OPT_FLAGS = -O3
 EXPORT_FLAGS = -s EXPORTED_RUNTIME_METHODS=ccall,cwrap,HEAPU8 \
-			   -s EXPORT_ES6=1
+			   -s EXPORT_ES6=1 \
+			   -s INITIAL_MEMORY=134217728  # 128 MiB
 
 all: $(TARGET_JS)
 

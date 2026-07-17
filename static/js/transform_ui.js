@@ -1,3 +1,60 @@
+import { updateCanvas } from './helpers.js';
+
+function callTransformWithReAlloc(state, transformFunc, width, height) {
+    const tmp = transformFunc(
+        state.currentImagePtr,
+        state.ctx.canvas.width,
+        state.ctx.canvas.height,
+        width,
+        height,
+    );
+
+    if (!tmp) {
+        return;
+    }
+
+    state.numBytes = width * height * 4;
+    state.ctx.canvas.width = width;
+    state.ctx.canvas.height = height;
+    state.currentImagePtr = tmp;
+
+    updateCanvas(state);
+}
+
+export function runResizeDialog(state, resize) {
+    const ratio = state.ctx.canvas.width / state.ctx.canvas.height;
+    const inputDialog = document.getElementById('resize-dialog');
+    const widthInput = document.getElementById('resize-width-input');
+    const heightText = document.getElementById('resize-height-text');
+    const dialogForm = document.getElementById('resize-form');
+    let width;
+    let height;
+
+    inputDialog.showModal();
+
+    widthInput.addEventListener('input', showHeight);
+    dialogForm.addEventListener('submit', onSubmit, { once: true });
+
+    function showHeight(event) {
+        heightText.textContent = Math.round(Number(event.target.value) / ratio);
+    }
+
+    function onSubmit() {
+        widthInput.removeEventListener('input', showHeight);
+
+        width = Number(widthInput.value);
+        height = Number(heightText.textContent);
+
+        widthInput.value = '';
+        heightText.textContent = '';
+
+        // 4K image is the cap
+        if (width > 0 && width <= 3840 && height > 0 && height <= 2160) {
+            callTransformWithReAlloc(state, resize, width, height);
+        }
+    }
+}
+
 export function runCropMode(ctx, crop) {
     const dialog = document.getElementById('crop-dialog');
     const canvas = document.getElementById('canvas');
@@ -72,38 +129,4 @@ export function runCropMode(ctx, crop) {
     canvas.addEventListener('mousedown', onMouseDown);
     canvas.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-}
-
-export function runResizeDialog(ctx, resize) {
-    const ratio = ctx.canvas.width / ctx.canvas.height;
-    const inputDialog = document.getElementById('resize-dialog');
-    const widthInput = document.getElementById('resize-width-input');
-    const heightText = document.getElementById('resize-height-text');
-    const dialogForm = document.getElementById('resize-form');
-    let width;
-    let height;
-
-    inputDialog.showModal();
-
-    widthInput.addEventListener('input', showHeight);
-    dialogForm.addEventListener('submit', onSubmit, { once: true });
-
-    function showHeight(event) {
-        heightText.textContent = Math.round(Number(event.target.value) / ratio);
-    }
-
-    function onSubmit() {
-        widthInput.removeEventListener('input', showHeight);
-
-        width = Number(widthInput.value);
-        height = Number(heightText.textContent);
-
-        widthInput.value = '';
-        heightText.textContent = '';
-
-        // 4K image is the cap
-        if (width > 0 && width <= 3840 && height > 0 && height <= 2160) {
-            resize(ctx, width, height);
-        }
-    }
 }
