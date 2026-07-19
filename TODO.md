@@ -17,16 +17,16 @@
 
 - [x] Split `helpers.js` into 2 or more files as it has gotten quite big
 
-## Pending
-- [ ] Blur, Sobel, and sharpen have the same core logic; outsource that to a helper function
-- [ ] Add comments (It has only been a couple days and I'm already having trouble understanding everything)
-
 ### Image Transformations
 - [x] Resize
 - [x] Crop
 - [x] Reflect
 
-- [ ] Finally make the move to C/WASM
+- [x] Finally make the move to C/WASM
+
+## Pending
+- [ ] Blur, Sobel, and sharpen have the same core logic; outsource that to a helper function
+- [ ] Add comments (It has only been a couple days and I'm already having trouble understanding everything)
 
 ### Better frontend
 - [ ] Sliders, buttons, selections, general frontend improvement
