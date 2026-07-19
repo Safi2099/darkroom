@@ -8,17 +8,16 @@
 EMSCRIPTEN_KEEPALIVE
 void greyscale(Pixel *image, int width, int height)
 {
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            Pixel *p = &PIXEL(image, i, j, width);
+    size_t total_pixels = (size_t) width * height;
 
-            int average = (int) ((p->r + p->g + p->b) / 3.0 + 0.5f);
-            p->r = average;
-            p->g = average;
-            p->b = average;
-        }
+    for (int i = 0; i < total_pixels; i++)
+    {
+        Pixel *p = &image[i];
+
+        int average = (int) ((p->r + p->g + p->b) / 3.0f + 0.5f);
+        p->r = average;
+        p->g = average;
+        p->b = average;
     }
 }
 
@@ -26,20 +25,19 @@ void greyscale(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void sepia(Pixel *image, int width, int height)
 {
-    for (int i = 0; i < height; i++)
+    size_t total_pixels = (size_t) width * height;
+
+    for (int i = 0; i < total_pixels; i++)
     {
-        for (int j = 0; j < width; j++)
-        {
-            Pixel *p = &PIXEL(image, i, j, width);
+        Pixel *p = &image[i];
 
-            int orig_r = p->r;
-            int orig_g = p->g;
-            int orig_b = p->b;
+        float orig_r = p->r;
+        float orig_g = p->g;
+        float orig_b = p->b;
 
-            p->r = clamp((int) (.393 * orig_r + .769 * orig_g + .189 * orig_b + 0.5f));
-            p->g = clamp((int) (.349 * orig_r + .686 * orig_g + .168 * orig_b + 0.5f));
-            p->b = clamp((int) (.272 * orig_r + .534 * orig_g + .131 * orig_b + 0.5f));
-        }
+        p->r = clamp((int) (.393f * orig_r + .769f * orig_g + .189f * orig_b + 0.5f));
+        p->g = clamp((int) (.349f * orig_r + .686f * orig_g + .168f * orig_b + 0.5f));
+        p->b = clamp((int) (.272f * orig_r + .534f * orig_g + .131f * orig_b + 0.5f));
     }
 }
 
@@ -47,16 +45,15 @@ void sepia(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void invert(Pixel *image, int width, int height)
 {
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            Pixel *p = &PIXEL(image, i, j, width);
+    size_t total_pixels = (size_t) width * height;
 
-            p->r = 255 - p->r;
-            p->g = 255 - p->g;
-            p->b = 255 - p->b;
-        }
+    for (int i = 0; i < total_pixels; i++)
+    {
+        Pixel *p = &image[i];
+
+        p->r = 255 - p->r;
+        p->g = 255 - p->g;
+        p->b = 255 - p->b;
     }
 }
 
@@ -64,7 +61,7 @@ void invert(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void blur(Pixel *image, int width, int height)
 {
-    size_t num_bytes = width * height * sizeof(Pixel);
+    size_t num_bytes = sizeof(Pixel) * width * height;
     Pixel *copy = malloc(num_bytes);
     if (copy == NULL)
     {
@@ -77,9 +74,9 @@ void blur(Pixel *image, int width, int height)
     {
         for (int j = 0; j < width; j++)
         {
-            int sum_red = 0;
-            int sum_green = 0;
-            int sum_blue = 0;
+            float sum_red = 0;
+            float sum_green = 0;
+            float sum_blue = 0;
 
             float divisor = 0;
 
@@ -122,7 +119,7 @@ void blur(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void edges(Pixel *image, int width, int height)
 {
-    size_t num_bytes = width * height * sizeof(Pixel);
+    size_t num_bytes = sizeof(Pixel) * width * height;
     Pixel *copy = malloc(num_bytes);
     if (copy == NULL)
     {
@@ -191,7 +188,7 @@ void edges(Pixel *image, int width, int height)
 EMSCRIPTEN_KEEPALIVE
 void sharpen(Pixel *image, int width, int height)
 {
-    size_t num_bytes = width * height * sizeof(Pixel);
+    size_t num_bytes = sizeof(Pixel) * width * height;
     Pixel *copy = malloc(num_bytes);
     if (copy == NULL)
     {
